@@ -9,7 +9,7 @@ def run_command(command):
     # 'command'를 실행하고, '결과(result)'를 반환받습니다.
     # capture_output=True: 터미널의 모든 출력을 'result' 변수에 담습니다.
     # text=True: 결과를 사람이 읽을 수 있는 '텍스트'로 받습니다.
-    result = subprocess.run(command, capture_output=True, text=True)
+    result = subprocess.run(command, capture_output=True, text=True, encoding='utf-8', errors='ignore')
 
     #핵심 오류처리
     #result.returncode'가 0이 아니라면(즉 오류가 나면)
