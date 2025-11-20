@@ -1,35 +1,46 @@
 import subprocess
-import sys
 
-#1. 커밋 메세지 입력하기
-message = input("커밋 메시지를 입력하세요")
+def git_auto_commit():
+    try:
+        # 1. 변경된 파일 목록 가져오기 (git status --porcelain)
+        # --porcelain 옵션은 기계가 읽기 쉽게 깔끔한 목록을 줍니다.
+        status_output = subprocess.check_output(
+            ["git", "status", "--porcelain"], 
+            encoding="utf-8"
+        )
 
-# 'subprocess.run'은 명령어와 결과를 완벽리 제어
-def run_command(command):
-    # 'command'를 실행하고, '결과(result)'를 반환받습니다.
-    # capture_output=True: 터미널의 모든 출력을 'result' 변수에 담습니다.
-    # text=True: 결과를 사람이 읽을 수 있는 '텍스트'로 받습니다.
-    result = subprocess.run(command, capture_output=True, text=True, encoding='utf-8', errors='ignore')
+        # 변경된 파일이 없으면 종료
+        if not status_output:
+            print("🙌 변경된 파일이 없습니다. 최신 상태입니다.")
+            return
 
-    #핵심 오류처리
-    #result.returncode'가 0이 아니라면(즉 오류가 나면)
-    if result.returncode != 0:
-        print(f"\n 오류발생! (명령어: {' '.join(command)})")
-        print("---GIT 오류 메시지---")
-        print(result.stderr)#git의 진짜 오류메시지 출력
-        print("------------")
-        print("작업중단")
-        sys.exit(1) #오류로 인해 작업중지
+        print("=" * 40)
+        print("📂 변경된 파일을 하나씩 커밋합니다...")
+        print("=" * 40)
 
-    print(f"성공:{' '.join(command)}")
-    print(result.stdout)
+        # 2. 한 줄씩 읽어서 파일별로 처리하기
+        for line in status_output.splitlines():
+            # line 예시: "M  week2/day3_requests.py" 
+            # 앞의 3글자는 상태코드(M, ?? 등)이므로 잘라내야 함
+            file_path = line[3:].strip()
 
-#-----자동화 순서------
-#2.git add . 실행
-run_command(["git", "add", "."])
-#3. git commit 실행
-run_command(["git", "commit", "-m", message])
-#4. git push 실행
-run_command(["git", "push"])
+            # (1) 해당 파일만 무대에 올리기 (add)
+            subprocess.run(["git", "add", file_path])
+            
+            # (2) 커밋 메시지를 "Update: 파일명"으로 자동 작성
+            commit_message = f"Update: {file_path}"
+            subprocess.run(["git", "commit", "-m", commit_message])
+            
+            print(f"✅ 커밋 완료: {commit_message}")
 
-print("\n 자동 커밋 푸시 완료")
+        # 3. 모든 커밋이 끝나면 한 번에 푸시
+        print("=" * 40)
+        print("🚀 GitHub로 푸시 중...")
+        subprocess.run(["git", "push"])
+        print("✨ 모든 작업이 완료되었습니다!")
+
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️ 에러 발생: {e}")
+
+if __name__ == "__main__":
+    git_auto_commit()
