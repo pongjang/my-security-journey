@@ -11,3 +11,10 @@ with open("report.txt", "w", encoding="utf-8") as f:
 
     f.write("\n[complit]")
 print("report complite check report.txt")
+
+try:
+    with open("없는파일.txt", "r") as f:
+        print(f.read())
+
+except FileNotFoundError:
+    print("not found file check file")

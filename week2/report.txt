@@ -1,0 +1,7 @@
+security scan report:2025-11-20
+------------------------------
+1. SQL injection
+2. XSS
+3. Weak Password
+
+[complit]
