@@ -1,0 +1,4 @@
+[2025-11-22 16:42:03]검색어 '정보보안' 전송성공 (URL:https://httpbin.org/get?q=%EC%A0%95%EB%B3%B4%EB%B3%B4%EC%95%88)
+[2025-11-22 16:42:06]검색어 'Python' 전송성공 (URL:https://httpbin.org/get?q=Python)
+[2025-11-22 16:42:10]검색어 'Hacking' 전송성공 (URL:https://httpbin.org/get?q=Hacking)
+[2025-11-22 16:42:12]검색어 'Gemini_pro' 전송성공 (URL:https://httpbin.org/get?q=Gemini_pro)
